@@ -15,8 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.http.HttpException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import mu.node.rexweather.app.Helpers.DayFormatter;
+import mu.node.rexweather.app.Helpers.HttpException;
 import mu.node.rexweather.app.Helpers.TemperatureFormatter;
 import mu.node.rexweather.app.Models.CurrentWeather;
 import mu.node.rexweather.app.Models.WeatherForecast;

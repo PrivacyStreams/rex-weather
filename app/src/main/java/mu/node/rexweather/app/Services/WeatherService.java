@@ -2,11 +2,10 @@ package mu.node.rexweather.app.Services;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.http.HttpException;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import mu.node.rexweather.app.Helpers.HttpException;
 import mu.node.rexweather.app.Models.CurrentWeather;
 import mu.node.rexweather.app.Models.WeatherForecast;
 import retrofit.RequestInterceptor;
@@ -19,7 +18,7 @@ import rx.functions.Func1;
 public class WeatherService {
     // We are implementing against version 2.5 of the Open Weather Map web service.
     private static final String WEB_SERVICE_BASE_URL = "http://api.openweathermap.org/data/2.5";
-    private static final String API_KEY = "insert your api key here";
+    private static final String API_KEY = "bfd0a8ac28e8f28ad37a8d0ed10593b1";
     private final OpenWeatherMapWebService mWebService;
 
     public WeatherService() {
