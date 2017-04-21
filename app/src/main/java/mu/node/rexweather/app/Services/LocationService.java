@@ -1,11 +1,18 @@
 package mu.node.rexweather.app.Services;
 
+import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+
+import com.github.privacystreams.core.Callback;
+import com.github.privacystreams.core.UQI;
+import com.github.privacystreams.core.purposes.Purpose;
+import com.github.privacystreams.location.Geolocation;
+import com.github.privacystreams.location.LatLng;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -15,47 +22,26 @@ import rx.Subscriber;
  * the location result as an Observable.
  */
 public class LocationService {
-    private final LocationManager mLocationManager;
+//    private final LocationManager mLocationManager;
+    private final Context mContext;
 
-    public LocationService(LocationManager locationManager) {
-        mLocationManager = locationManager;
+    public LocationService(Context context) {
+        mContext = context;
     }
 
-    public Observable<Location> getLocation() {
-        return Observable.create(new Observable.OnSubscribe<Location>() {
+    public Observable<LatLng> getLocation() {
+        return Observable.create(new Observable.OnSubscribe<LatLng>() {
             @Override
-            public void call(final Subscriber<? super Location> subscriber) {
-
-                final LocationListener locationListener = new LocationListener() {
-                    public void onLocationChanged(final Location location) {
-                        subscriber.onNext(location);
-                        subscriber.onCompleted();
-
-                        Looper.myLooper().quit();
-                    }
-
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                    }
-
-                    public void onProviderEnabled(String provider) {
-                    }
-
-                    public void onProviderDisabled(String provider) {
-                    }
-                };
-
-                final Criteria locationCriteria = new Criteria();
-                locationCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
-                locationCriteria.setPowerRequirement(Criteria.POWER_LOW);
-                final String locationProvider = mLocationManager
-                        .getBestProvider(locationCriteria, true);
-
-                Looper.prepare();
-
-                mLocationManager.requestSingleUpdate(locationProvider,
-                        locationListener, Looper.myLooper());
-
-                Looper.loop();
+            public void call(final Subscriber<? super LatLng> subscriber) {
+                UQI uqi = new UQI(mContext);
+                uqi.getData(Geolocation.asCurrent(Geolocation.LEVEL_CITY), Purpose.UTILITY("check weather"))
+                        .ifPresent("lat_lng", new Callback<LatLng>() {
+                            @Override
+                            protected void onInput(LatLng input) {
+                                subscriber.onNext(input);
+                                subscriber.onCompleted();
+                            }
+                        });
             }
         });
     }

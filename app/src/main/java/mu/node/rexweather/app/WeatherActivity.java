@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.privacystreams.location.LatLng;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,16 +192,14 @@ public class WeatherActivity extends Activity {
         private void updateWeather() {
             mSwipeRefreshLayout.setRefreshing(true);
 
-            final LocationManager locationManager = (LocationManager) getActivity()
-                    .getSystemService(Context.LOCATION_SERVICE);
-            final LocationService locationService = new LocationService(locationManager);
+            final LocationService locationService = new LocationService(getActivity());
 
             // Get our current location.
             final Observable fetchDataObservable = locationService.getLocation()
                     .timeout(LOCATION_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .flatMap(new Func1<Location, Observable<HashMap<String, WeatherForecast>>>() {
+                    .flatMap(new Func1<LatLng, Observable<HashMap<String, WeatherForecast>>>() {
                         @Override
-                        public Observable<HashMap<String, WeatherForecast>> call(final Location location) {
+                        public Observable<HashMap<String, WeatherForecast>> call(final LatLng location) {
                             final WeatherService weatherService = new WeatherService();
                             final double longitude = location.getLongitude();
                             final double latitude = location.getLatitude();
